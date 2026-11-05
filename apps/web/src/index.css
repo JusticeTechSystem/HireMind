@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+:root { --navy: 11 16 32; --charcoal: 20 23 42; --accent-text: 167 139 250; color-scheme: dark; }
+[data-theme='light'] { --navy: 246 247 251; --charcoal: 255 255 255; --accent-text: 109 40 217; color-scheme: light; }
+body { background-color: rgb(var(--navy)); }
+:focus-visible { outline: 2px solid rgb(var(--accent-text)); outline-offset: 2px; }
+/* Light-theme overrides for the stock utilities used across the app. Ratios verified by scripts/contrast-check.mjs. */
+[data-theme='light'] .text-white { color: #0f172a; }
+[data-theme='light'] .text-gray-300 { color: #334155; }
+[data-theme='light'] .text-gray-400 { color: #475569; }
+[data-theme='light'] .text-green-300, [data-theme='light'] .text-green-400 { color: #15803d; }
+[data-theme='light'] .text-red-300, [data-theme='light'] .text-red-400 { color: #b91c1c; }
+[data-theme='light'] .text-amber-200, [data-theme='light'] .text-amber-300, [data-theme='light'] .text-amber-400 { color: #92400e; }
+[data-theme='light'] .border-white\/10 { border-color: rgb(15 23 42 / 0.15); }
+[data-theme='light'] .border-white\/20 { border-color: rgb(15 23 42 / 0.3); }
+[data-theme='light'] .bg-accent { color: #fff; }

@@ -1,0 +1,22 @@
+services:
+  postgres:
+    image: postgres:16
+    environment: {POSTGRES_USER: jv, POSTGRES_PASSWORD: jv, POSTGRES_DB: justiceview}
+    ports: ["5432:5432"]
+    volumes: [pgdata:/var/lib/postgresql/data]
+  redis:
+    image: redis:7
+    ports: ["6379:6379"]
+  api:
+    profiles: [app]
+    build: { context: ., dockerfile: infrastructure/docker/api.Dockerfile }
+    env_file: .env
+    environment: { DATABASE_URL: postgresql://jv:jv@postgres:5432/justiceview, DIRECT_URL: postgresql://jv:jv@postgres:5432/justiceview, REDIS_URL: redis://redis:6379 }
+    depends_on: [postgres, redis]
+    ports: ["3000:3000"]
+  web:
+    profiles: [app]
+    build: { context: ., dockerfile: infrastructure/docker/web.Dockerfile }
+    depends_on: [api]
+    ports: ["8080:80"]
+volumes: {pgdata: {}}

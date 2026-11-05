@@ -1,0 +1,344 @@
+generator client { provider = "prisma-client-js" }
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum RoleName { USER ADMIN SUPER_ADMIN }
+enum SessionStatus { CREATED ACTIVE PAUSED COMPLETED }
+enum AudioSource { MICROPHONE SYSTEM }
+enum SubStatus { ACTIVE PAST_DUE CANCELED TRIALING }
+
+model User {
+  id        String   @id @default(uuid()) @db.Uuid
+  email     String   @unique
+  suspended Boolean  @default(false)
+  createdAt DateTime @default(now()) @db.Timestamptz
+  updatedAt DateTime @updatedAt @db.Timestamptz
+  profile   Profile?
+  roles     UserRole[]
+  resumes   Resume[]
+  sessions  InterviewSession[]
+  subscriptions Subscription[]
+  usage     UsageRecord[]
+  mocks     MockInterview[]
+  stripeCustomerId String? @unique
+  payments  Payment[]
+  notifications Notification[]
+  tickets   SupportTicket[]
+  loginSessions UserSession[]
+  answerFeedback AnswerFeedback[]
+  idempotencyKeys IdempotencyKey[]
+  auditLogs AuditLog[]
+}
+model Profile {
+  id String @id @default(uuid()) @db.Uuid
+  userId String @unique @db.Uuid
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  fullName String?
+  title String?
+  careerLevel String?
+  yearsExperience Int?
+  industry String?
+  specialization String?
+  languages String[]
+  frameworks String[]
+  interviewCategory String?
+  answerStyle String?
+  objectives String?
+  onboardedAt DateTime? @db.Timestamptz
+  avatarPath String?
+  retentionDays Int?
+  preferences Json @default("{}")
+  createdAt DateTime @default(now()) @db.Timestamptz
+  updatedAt DateTime @updatedAt @db.Timestamptz
+}
+model Role {
+  id String @id @default(uuid()) @db.Uuid
+  name RoleName @unique
+  users UserRole[]
+}
+model UserRole {
+  userId String @db.Uuid
+  roleId String @db.Uuid
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role Role @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  @@id([userId, roleId])
+}
+model Plan {
+  id String @id @default(uuid()) @db.Uuid
+  code String @unique
+  name String
+  limits Json
+  stripePriceMonthly String?
+  stripePriceAnnual String?
+  priceMonthlyCents Int?
+  priceAnnualCents Int?
+  currency String @default("usd")
+  subscriptions Subscription[]
+}
+model Subscription {
+  id String @id @default(uuid()) @db.Uuid
+  userId String @db.Uuid
+  planId String @db.Uuid
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  plan Plan @relation(fields: [planId], references: [id])
+  status SubStatus
+  stripeSubscriptionId String? @unique
+  currentPeriodEnd DateTime? @db.Timestamptz
+  cancelAtPeriodEnd Boolean @default(false)
+  interval String?
+  createdAt DateTime @default(now()) @db.Timestamptz
+  @@index([userId])
+}
+model Resume {
+  id String @id @default(uuid()) @db.Uuid
+  userId String @db.Uuid
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  storagePath String
+  fileName String
+  isDefault Boolean @default(false)
+  sizeBytes Int @default(0)
+  scanStatus String @default("skipped")
+  analysisStatus String @default("pending")
+  extractedText String?
+  structured Json?
+  createdAt DateTime @default(now()) @db.Timestamptz
+  sessions InterviewSession[]
+  @@index([userId])
+}
+model InterviewSession {
+  id String @id @default(uuid()) @db.Uuid
+  userId String @db.Uuid
+  resumeId String? @db.Uuid
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  resume Resume? @relation(fields: [resumeId], references: [id], onDelete: SetNull)
+  title String
+  category String?
+  status SessionStatus @default(CREATED)
+  startedAt DateTime? @db.Timestamptz
+  endedAt DateTime? @db.Timestamptz
+  summary Json?
+  activeMs Int @default(0)
+  lastResumedAt DateTime? @db.Timestamptz
+  createdAt DateTime @default(now()) @db.Timestamptz
+  transcripts Transcript[]
+  questions InterviewQuestion[]
+  @@index([userId, createdAt])
+}
+model Transcript {
+  id String @id @default(uuid()) @db.Uuid
+  sessionId String @db.Uuid
+  session InterviewSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  source AudioSource
+  text String
+  offsetMs Int
+  eventId String
+  createdAt DateTime @default(now()) @db.Timestamptz
+  @@unique([sessionId, eventId]) // duplicate event protection
+  @@index([sessionId, offsetMs])
+}
+model InterviewQuestion {
+  id String @id @default(uuid()) @db.Uuid
+  sessionId String @db.Uuid
+  session InterviewSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  text String
+  category String
+  confidence Float
+  difficulty String?
+  source String @default("detected")
+  createdAt DateTime @default(now()) @db.Timestamptz
+  answers AiAnswer[]
+  @@index([sessionId])
+}
+model AiAnswer {
+  id String @id @default(uuid()) @db.Uuid
+  questionId String @db.Uuid
+  question InterviewQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  mode String
+  payload Json
+  saved Boolean @default(false)
+  feedback AnswerFeedback[]
+  createdAt DateTime @default(now()) @db.Timestamptz
+}
+model UsageRecord {
+  id String @id @default(uuid()) @db.Uuid
+  userId String @db.Uuid
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  metric String
+  quantity Float
+  createdAt DateTime @default(now()) @db.Timestamptz
+  @@index([userId, metric, createdAt])
+}
+model AuditLog {
+  id String @id @default(uuid()) @db.Uuid
+  actorId String? @db.Uuid
+  actor User? @relation(fields: [actorId], references: [id], onDelete: SetNull)
+  action String
+  target String?
+  meta Json?
+  createdAt DateTime @default(now()) @db.Timestamptz
+}
+
+model MockInterview {
+  id String @id @default(uuid()) @db.Uuid
+  userId String @db.Uuid
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  category String
+  jobTitle String
+  level String
+  difficulty String
+  durationMin Int
+  numQuestions Int
+  status String @default("IN_PROGRESS")
+  overallScore Float?
+  summary Json?
+  createdAt DateTime @default(now()) @db.Timestamptz
+  completedAt DateTime? @db.Timestamptz
+  questions MockQuestion[]
+  @@index([userId, createdAt])
+}
+model MockQuestion {
+  id String @id @default(uuid()) @db.Uuid
+  mockId String @db.Uuid
+  mock MockInterview @relation(fields: [mockId], references: [id], onDelete: Cascade)
+  idx Int
+  text String
+  topic String @default("")
+  response MockResponse?
+  @@unique([mockId, idx])
+}
+model MockResponse {
+  id String @id @default(uuid()) @db.Uuid
+  questionId String @unique @db.Uuid
+  question MockQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  answerText String
+  scores Json
+  feedback Json
+  createdAt DateTime @default(now()) @db.Timestamptz
+}
+
+model Payment {
+  id String @id @default(uuid()) @db.Uuid
+  userId String @db.Uuid
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  stripeInvoiceId String @unique
+  amount Int
+  currency String
+  status String
+  hostedInvoiceUrl String?
+  invoicePdf String?
+  createdAt DateTime @default(now()) @db.Timestamptz
+  @@index([userId, createdAt])
+}
+model Notification {
+  id String @id @default(uuid()) @db.Uuid
+  userId String @db.Uuid
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type String
+  title String
+  body String
+  readAt DateTime? @db.Timestamptz
+  createdAt DateTime @default(now()) @db.Timestamptz
+  @@index([userId, createdAt])
+}
+model StripeEvent {
+  id String @id
+  createdAt DateTime @default(now()) @db.Timestamptz
+}
+
+model SupportTicket {
+  id String @id @default(uuid()) @db.Uuid
+  userId String @db.Uuid
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  subject String
+  body String
+  status String @default("OPEN")
+  adminNote String?
+  createdAt DateTime @default(now()) @db.Timestamptz
+  updatedAt DateTime @updatedAt @db.Timestamptz
+  @@index([status, createdAt])
+}
+model Announcement {
+  id String @id @default(uuid()) @db.Uuid
+  title String
+  body String
+  active Boolean @default(true)
+  createdBy String? @db.Uuid
+  expiresAt DateTime? @db.Timestamptz
+  createdAt DateTime @default(now()) @db.Timestamptz
+}
+model AiRequestLog {
+  id String @id @default(uuid()) @db.Uuid
+  userId String? @db.Uuid
+  provider String
+  model String
+  purpose String
+  status String
+  httpStatus Int?
+  promptTokens Int?
+  completionTokens Int?
+  latencyMs Int
+  createdAt DateTime @default(now()) @db.Timestamptz
+  @@index([createdAt])
+  @@index([status, createdAt])
+}
+model PlatformSetting {
+  key String @id
+  value Json
+  updatedAt DateTime @updatedAt @db.Timestamptz
+}
+
+model DeletedAccount {
+  id String @id @db.Uuid
+  createdAt DateTime @default(now()) @db.Timestamptz
+}
+
+model UserSession {
+  id String @id @db.Uuid
+  userId String @db.Uuid
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userAgent String?
+  ipPrefix String?
+  createdAt DateTime @default(now()) @db.Timestamptz
+  lastSeenAt DateTime @default(now()) @db.Timestamptz
+  revokedAt DateTime? @db.Timestamptz
+  @@index([userId, lastSeenAt])
+}
+model AnswerFeedback {
+  id String @id @default(uuid()) @db.Uuid
+  answerId String @db.Uuid
+  userId String @db.Uuid
+  answer AiAnswer @relation(fields: [answerId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  rating Int
+  comment String?
+  createdAt DateTime @default(now()) @db.Timestamptz
+  @@unique([answerId, userId])
+  @@index([userId])
+}
+
+model Job {
+  id String @id @default(uuid()) @db.Uuid
+  type String
+  payload Json
+  status String @default("PENDING")
+  attempts Int @default(0)
+  runAt DateTime @default(now()) @db.Timestamptz
+  lockedAt DateTime? @db.Timestamptz
+  lastError String?
+  createdAt DateTime @default(now()) @db.Timestamptz
+  @@index([status, runAt])
+}
+model IdempotencyKey {
+  userId String @db.Uuid
+  key String
+  route String
+  status Int @default(0)
+  response Json?
+  createdAt DateTime @default(now()) @db.Timestamptz
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@id([userId, key])
+  @@index([createdAt])
+}

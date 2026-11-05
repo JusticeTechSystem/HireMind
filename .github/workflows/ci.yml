@@ -1,0 +1,57 @@
+name: ci
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env: { POSTGRES_USER: jv, POSTGRES_PASSWORD: jv, POSTGRES_DB: justiceview }
+        ports: ['5432:5432']
+        options: --health-cmd "pg_isready -U jv" --health-interval 5s --health-retries 10
+    env:
+      DATABASE_URL: postgresql://jv:jv@localhost:5432/justiceview
+      DIRECT_URL: postgresql://jv:jv@localhost:5432/justiceview
+      SHADOW_URL: postgresql://jv:jv@localhost:5432/shadow
+      JWT_SECRET: ci-secret-ci-secret-ci-secret-1234
+      FRONTEND_URL: http://localhost:5173
+      BACKEND_URL: http://localhost:3000
+      REDIS_URL: redis://localhost:6379
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: pnpm }
+      - run: pnpm install --frozen-lockfile=false
+      - run: pnpm exec prisma validate && pnpm exec prisma generate
+      - name: Committed migrations match the schema (fails on any drift)
+        run: |
+          PGPASSWORD=jv psql -h localhost -U jv -d justiceview -c 'create database shadow'
+          pnpm exec prisma migrate diff --from-migrations prisma/migrations --to-schema-datamodel prisma/schema.prisma --shadow-database-url "$SHADOW_URL" --exit-code
+      - name: Apply migrations and RLS to a real database
+        run: |
+          pnpm exec prisma migrate deploy
+          pnpm exec prisma db execute --file prisma/rls.sql --schema prisma/schema.prisma
+      - run: node scripts/contrast-check.mjs
+      - run: pnpm --filter "./packages/*" build
+      - run: pnpm --filter @justiceview/api build
+      - run: pnpm --filter @justiceview/web build
+      - run: pnpm --filter @justiceview/web lint
+      - run: pnpm --filter @justiceview/api test
+      - run: pnpm --filter @justiceview/web test
+      - run: pnpm audit --prod --audit-level=high
+  a11y:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: pnpm }
+      - run: pnpm install --frozen-lockfile=false
+      - run: pnpm --filter "./packages/*" build && pnpm --filter @justiceview/web build
+      - run: pnpm exec playwright install --with-deps chromium
+      - name: axe scan of public pages, dark and light
+        run: |
+          pnpm --filter @justiceview/web exec vite preview --port 5173 &
+          sleep 5
+          pnpm exec playwright test tests/e2e/a11y.spec.ts
