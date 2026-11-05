@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Link, useNavigate } from 'react-router-dom';
-import { passwordResetSchema } from '@justiceview/validation';
+import { passwordResetSchema } from '@hiremind/validation';
 import { supabase } from '../lib/supabase';
 
 type F = { password: string; confirm: string };

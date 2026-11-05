@@ -1,4 +1,4 @@
-# JusticeView — status
+# HireMind — status
 
 Monorepo for an AI interview copilot (React + NestJS + Prisma + Supabase). **All 12 phases of the plan and every follow-up feature are written, but nothing has been compiled or executed**: the build sandbox had no network, so only syntax parsing and a handful of dependency-free logic checks were run. Start with CI (`.github/workflows/ci.yml`), then read `docs/launch-checklist.md` for the honest done/not-done list.
 
@@ -6,7 +6,7 @@ Docs: `docs/architecture.md` · `database.md` · `api.md` · `security.md` · `d
 
 ---
 
-# JusticeView — Phase 1 (Foundation)
+# HireMind — Phase 1 (Foundation)
 
 Status: **Phase 1 scaffold only.** Phases 2–12 are not implemented.
 
@@ -15,7 +15,7 @@ Status: **Phase 1 scaffold only.** Phases 2–12 are not implemented.
 cp .env.example .env   # fill DATABASE_URL, JWT_SECRET (32+ chars)
 docker compose up -d
 pnpm install
-pnpm --filter @justiceview/config build && pnpm --filter @justiceview/shared-types build
+pnpm --filter @hiremind/config build && pnpm --filter @hiremind/shared-types build
 pnpm db:migrate && pnpm db:seed
 pnpm dev:api   # http://localhost:3000/api/docs
 pnpm dev:web   # http://localhost:5173
@@ -102,7 +102,7 @@ Prisma schema covers 12 of 28 planned entities; the rest arrive with their modul
 
 ## Phase 11 (Quality assurance) — test infrastructure written; NOTHING WAS EXECUTED HERE
 **What exists**
-- API (Jest + Supertest): per-module unit specs from earlier phases plus `security.spec.ts` — HTTP-level checks of 401 (no/garbage/wrong-secret/`alg:none` tokens), 403 (non-admin, suspended admin, admin on Super-Admin routes), 400 validation, cross-user IDOR (404 and `userId`-scoped queries), Stripe webhook (400 on bad/missing signature, verifies the raw bytes, no user token needed) and 429 rate limiting. Jest maps `@justiceview/*` to package sources, so tests don't need a prior build, and runs with `isolatedModules` (type errors surface in `nest build`, not in Jest).
+- API (Jest + Supertest): per-module unit specs from earlier phases plus `security.spec.ts` — HTTP-level checks of 401 (no/garbage/wrong-secret/`alg:none` tokens), 403 (non-admin, suspended admin, admin on Super-Admin routes), 400 validation, cross-user IDOR (404 and `userId`-scoped queries), Stripe webhook (400 on bad/missing signature, verifies the raw bytes, no user token needed) and 429 rate limiting. Jest maps `@hiremind/*` to package sources, so tests don't need a prior build, and runs with `isolatedModules` (type errors surface in `nest build`, not in Jest).
 - Web (Vitest + React Testing Library): `useCapture` — mic permission denied, unsupported browser, device disconnection, immediate stop, system audio with **no audio track** (never claims capture), cancelled sharing, video dropped, independent stop of each source, pause/resume, release on unmount; `AuthPage` validation and error display.
 - E2E (Playwright, `pnpm test:e2e`): the journey login → onboarding → resume upload → session → mic permission (fake device) → pause/end → history → analytics, plus redirect-when-unauthenticated. Needs a running stack and a pre-verified test user in a non-production Supabase project (`E2E_EMAIL`, `E2E_PASSWORD`; `E2E_LIVE_AI=1` adds the AI answer step). **Not covered end-to-end:** registration + email verification, real system-audio capture, live OpenAI transcription, Stripe checkout — these can't be automated headlessly without external accounts; test them manually in staging with Stripe test mode and a real browser.
 - Load (k6, `pnpm test:load`): 50 req/s for 2 min. The targets in the script (health p95 < 200 ms, reads p95 < 500 ms, < 1% errors) are **proposals, not measured results**; run against staging and adjust.

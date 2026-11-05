@@ -1,1 +1,1 @@
-{"name":"@justiceview/config","version":"0.1.0","main":"dist/index.js","types":"dist/index.d.ts","scripts":{"build":"tsc -p .","test":"echo \"no tests yet\""},"dependencies":{"zod":"^3.23.8"}}
+{"name":"@hiremind/config","version":"0.1.0","main":"dist/index.js","types":"dist/index.d.ts","scripts":{"build":"tsc -p .","test":"echo \"no tests yet\""},"dependencies":{"zod":"^3.23.8"}}

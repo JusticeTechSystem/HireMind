@@ -1,7 +1,7 @@
 import { BadRequestException, Body, Controller, Delete, Get, Param, ParseUUIDPipe, Patch, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { Throttle } from '@nestjs/throttler';
 import { z } from 'zod';
-import { answerModeSchema, feedbackSchema } from '@justiceview/validation';
+import { answerModeSchema, feedbackSchema } from '@hiremind/validation';
 import { AuthGuard } from '../auth/auth.guard';
 import { CurrentUser, RolesGuard } from '../auth/roles';
 import type { AuthUser } from '../auth/auth.types';

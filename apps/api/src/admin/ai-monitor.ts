@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
-import { integrationStatus, loadEnv } from '@justiceview/config';
+import { integrationStatus, loadEnv } from '@hiremind/config';
 import { PrismaService } from '../prisma/prisma.service';
 import { Pricing, pricingSchema } from './admin.schemas';
 

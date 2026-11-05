@@ -1,5 +1,5 @@
 import { Injectable, ServiceUnavailableException } from '@nestjs/common';
-import { loadEnv } from '@justiceview/config';
+import { loadEnv } from '@hiremind/config';
 /** Private Supabase Storage. Throws 503 when credentials are absent; never pretends to store. `bucket` defaults to the resume bucket. */
 @Injectable()
 export class StorageService {

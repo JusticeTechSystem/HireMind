@@ -1,5 +1,5 @@
 import { Injectable, Logger, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
-import { loadEnv } from '@justiceview/config';
+import { loadEnv } from '@hiremind/config';
 import { PrismaService } from '../prisma/prisma.service';
 
 export const cutoff = (now: Date, days: number) => new Date(now.getTime() - days * 864e5);

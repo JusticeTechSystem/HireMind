@@ -1,4 +1,4 @@
-import { resumeProfileSchema } from '@justiceview/validation';
+import { resumeProfileSchema } from '@hiremind/validation';
 import { retrieveContext } from '../resumes/retrieval';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';

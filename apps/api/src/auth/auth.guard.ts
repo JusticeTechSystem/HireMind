@@ -2,7 +2,7 @@ import { SessionRegistry } from './session-registry';
 import { aiContext } from '../ai/ai-context';
 import { CanActivate, ExecutionContext, ForbiddenException, Injectable, Optional, UnauthorizedException } from '@nestjs/common';
 import * as jwt from 'jsonwebtoken';
-import { loadEnv } from '@justiceview/config';
+import { loadEnv } from '@hiremind/config';
 import { verifyAccessToken } from './token';
 import { PrismaService } from '../prisma/prisma.service';
 

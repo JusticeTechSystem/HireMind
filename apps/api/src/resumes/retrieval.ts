@@ -1,4 +1,4 @@
-import type { ResumeProfile } from '@justiceview/validation';
+import type { ResumeProfile } from '@hiremind/validation';
 const tok = (s: string) => new Set(s.toLowerCase().match(/[a-z0-9+#.]{2,}/g) ?? []);
 export interface ContextItem { kind: 'employment' | 'project' | 'skill'; label: string; score: number }
 /** Keyword-overlap retrieval over the structured profile. Deterministic; no model call. */

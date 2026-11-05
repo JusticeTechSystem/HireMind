@@ -1,5 +1,5 @@
 import * as net from 'net';
-import { loadEnv } from '@justiceview/config';
+import { loadEnv } from '@hiremind/config';
 export type ScanResult = 'clean' | 'infected' | 'skipped';
 /** ClamAV clamd INSTREAM. Returns 'skipped' (never 'clean') when no scanner is configured. */
 export async function scanBuffer(buf: Buffer): Promise<ScanResult> {

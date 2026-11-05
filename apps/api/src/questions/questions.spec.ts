@@ -2,7 +2,7 @@ import { NotFoundException, UnprocessableEntityException } from '@nestjs/common'
 import { looksLikeQuestion, similarity } from './heuristics';
 import { QuestionDetector } from './detector';
 import { AnswersService, sanitizeAnswer } from './answers.service';
-import { aiAnswerSchema, resumeProfileSchema } from '@justiceview/validation';
+import { aiAnswerSchema, resumeProfileSchema } from '@hiremind/validation';
 
 describe('looksLikeQuestion', () => {
   it.each(['Can you explain how closures work in JavaScript?', 'Tell me about a time you led a team through a deadline', 'How would you design a rate limiter', 'Why?? really now?'])('accepts %s', (t) => expect(looksLikeQuestion(t)).toBe(true));

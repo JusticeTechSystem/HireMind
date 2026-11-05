@@ -1,4 +1,4 @@
-import type { AudioSource } from '@justiceview/shared-types';
+import type { AudioSource } from '@hiremind/shared-types';
 export interface Cred { token: string; url: string }
 export type TxStatus = 'idle' | 'connecting' | 'live' | 'reconnecting' | 'failed';
 interface Opts { stream: MediaStream; source: AudioSource; baseMs: number; getCredential: () => Promise<Cred>;

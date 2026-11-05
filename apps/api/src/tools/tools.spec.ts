@@ -1,5 +1,5 @@
 import { BadRequestException, ConflictException, NotFoundException, UnprocessableEntityException } from '@nestjs/common';
-import { codingRequestSchema, codingResponseSchema, mockCreateSchema } from '@justiceview/validation';
+import { codingRequestSchema, codingResponseSchema, mockCreateSchema } from '@hiremind/validation';
 import { completeValidated, parse } from '../common/parse';
 import { dimensionAverages, MockService, overallScore } from '../mock/mock.service';
 import { sanitizeMermaid, ToolsService } from './tools.service';

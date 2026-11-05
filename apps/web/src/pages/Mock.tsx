@@ -45,7 +45,7 @@ export function MockSession() {
   const SR = (window as any).SpeechRecognition ?? (window as any).webkitSpeechRecognition;
   const dictate = () => {
     if (listening) { rec.current?.stop(); return; }
-    if (!confirm('Dictation uses your browser’s speech service (e.g. Google/Apple), not JusticeView. Continue?')) return;
+    if (!confirm('Dictation uses your browser’s speech service (e.g. Google/Apple), not HireMind. Continue?')) return;
     const r = new SR(); r.continuous = true; r.interimResults = false; r.lang = 'en-US';
     r.onresult = (e: any) => setText((t) => (t + ' ' + Array.from(e.results).slice(e.resultIndex).map((x: any) => x[0].transcript).join(' ')).trim());
     r.onend = () => setListening(false); r.onerror = () => setListening(false); rec.current = r; r.start(); setListening(true);

@@ -1,7 +1,7 @@
 import { UsageService } from '../billing/usage.service';
 import { BadRequestException, ConflictException, Injectable, NotFoundException, Optional } from '@nestjs/common';
 import { z } from 'zod';
-import { mockEvalSchema, type MockCreateInput, type MockEval } from '@justiceview/validation';
+import { mockEvalSchema, type MockCreateInput, type MockEval } from '@hiremind/validation';
 import { AiProvider } from '../ai/ai-provider';
 import { completeValidated } from '../common/parse';
 import { PrismaService } from '../prisma/prisma.service';

@@ -1,5 +1,5 @@
 import { BadGatewayException, Injectable, ServiceUnavailableException } from '@nestjs/common';
-import { loadEnv } from '@justiceview/config';
+import { loadEnv } from '@hiremind/config';
 import { AuditService } from '../admin/audit.service';
 import { StripeGateway } from '../billing/stripe.gateway';
 import { PrismaService } from '../prisma/prisma.service';

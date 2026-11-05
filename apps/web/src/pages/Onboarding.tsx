@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
-import { onboardingSchema, type OnboardingInput } from '@justiceview/validation';
+import { onboardingSchema, type OnboardingInput } from '@hiremind/validation';
 import { api, uploadFile } from '../lib/auth';
 
 const csv = (s: string) => s.split(',').map((x) => x.trim()).filter(Boolean);

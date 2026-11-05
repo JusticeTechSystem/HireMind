@@ -1,5 +1,5 @@
 import { BadRequestException, Body, Controller, DefaultValuePipe, Delete, Get, Param, ParseIntPipe, ParseUUIDPipe, Post, Query, UseGuards } from '@nestjs/common';
-import { createInterviewSchema } from '@justiceview/validation';
+import { createInterviewSchema } from '@hiremind/validation';
 import { AuthGuard } from '../auth/auth.guard';
 import { CurrentUser, RolesGuard } from '../auth/roles';
 import type { AuthUser } from '../auth/auth.types';

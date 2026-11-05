@@ -18,13 +18,13 @@ const MSG: Record<CapStatus, string> = {
   cancelled: 'Sharing cancelled', disconnected: 'Device disconnected', error: 'Capture error' };
 const fmt = (ms: number) => { const s = Math.floor(ms / 1000); return [s / 3600, (s / 60) % 60, s % 60].map((n) => String(Math.floor(n)).padStart(2, '0')).join(':'); };
 type Settings = { mode: (typeof MODES)[number]; auto: boolean };
-const loadSettings = (): Settings => { try { return { mode: 'CONCISE', auto: false, ...JSON.parse(localStorage.getItem('jv-ws-settings') ?? '{}') }; } catch { return { mode: 'CONCISE', auto: false }; } };
+const loadSettings = (): Settings => { try { return { mode: 'CONCISE', auto: false, ...JSON.parse(localStorage.getItem('hm-ws-settings') ?? '{}') }; } catch { return { mode: 'CONCISE', auto: false }; } };
 
 export function Workspace() {
   const { id } = useParams(); const qc = useQueryClient(); const cap = useCapture();
   const [q, setQ] = useState(''); const [now, setNow] = useState(Date.now()); const [tab, setTab] = useState<'transcript' | 'ai' | 'context'>('ai');
   const [settings, setSettings] = useState(loadSettings); const [selQ, setSelQ] = useState<string | null>(null); const [captureOff, setCaptureOff] = useState(false);
-  const save = (s: Settings) => { setSettings(s); try { localStorage.setItem('jv-ws-settings', JSON.stringify(s)); } catch { /* storage unavailable: setting lasts for this visit */ } };
+  const save = (s: Settings) => { setSettings(s); try { localStorage.setItem('hm-ws-settings', JSON.stringify(s)); } catch { /* storage unavailable: setting lasts for this visit */ } };
   const sess = useQuery({ queryKey: ['session', id], queryFn: () => api<Session>(`/interviews/${id}`) });
   const tr = useQuery({ queryKey: ['transcripts', id], queryFn: () => api<{ items: Seg[] }>(`/interviews/${id}/transcripts`), refetchInterval: 5000 });
   const act = useMutation({ mutationFn: (a: string) => api<Session>(`/interviews/${id}/${a}`, { method: 'POST' }), onSuccess: (s) => qc.setQueryData(['session', id], s) });
@@ -33,9 +33,9 @@ export function Workspace() {
   const rt = useRealtime(id, () => qc.invalidateQueries({ queryKey: ['transcripts', id] }), () => qc.invalidateQueries({ queryKey: ['questions', id] }));
   const [tx, setTx] = useState<{ mic: TxStatus; sys: TxStatus }>({ mic: 'idle', sys: 'idle' });
   const consent = () => {
-    if (sessionStorage.getItem('jv-consent')) return true;
+    if (sessionStorage.getItem('hm-consent')) return true;
     const ok = confirm('Audio will be streamed to OpenAI to produce a live transcript while capture is on. Raw audio is not stored. Only continue if everyone on the call consents to being transcribed.');
-    if (ok) sessionStorage.setItem('jv-consent', '1'); return ok;
+    if (ok) sessionStorage.setItem('hm-consent', '1'); return ok;
   };
   const getCredential = () => api<{ token: string; url: string }>(`/interviews/${id}/transcription/token`, { method: 'POST' });
   const live = s?.status === 'ACTIVE' || s?.status === 'PAUSED';
@@ -62,7 +62,7 @@ export function Workspace() {
   return (
     <div className="min-h-screen bg-navy text-white flex flex-col">
       <header className="flex flex-wrap items-center gap-3 p-3 border-b border-white/10">
-        <Link to="/dashboard" aria-label="JusticeView dashboard"><Logo size={22} /></Link>
+        <Link to="/dashboard" aria-label="HireMind dashboard"><Logo size={22} /></Link>
         <span className="flex-1 truncate">{s.title}</span>
         <span role="timer" aria-label="Session timer" className="font-mono">{fmt(elapsed)}</span>
         <span className="text-xs text-gray-300">{s.status}</span>

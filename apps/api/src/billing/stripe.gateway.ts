@@ -1,6 +1,6 @@
 import { Injectable, ServiceUnavailableException } from '@nestjs/common';
 import Stripe from 'stripe';
-import { loadEnv } from '@justiceview/config';
+import { loadEnv } from '@hiremind/config';
 
 /** Thin wrapper over the Stripe SDK so business logic (and tests) never touch it directly. */
 @Injectable()

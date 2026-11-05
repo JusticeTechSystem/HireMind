@@ -2,7 +2,7 @@ import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { detectResumeType, MAX_RESUME_BYTES } from './file-validation';
 import { retrieveContext } from './retrieval';
 import { ResumesService } from './resumes.service';
-import { resumeProfileSchema } from '@justiceview/validation';
+import { resumeProfileSchema } from '@hiremind/validation';
 
 describe('file validation', () => {
   it('accepts PDF magic bytes', () => expect(detectResumeType(Buffer.from('%PDF-1.7 x'))).toBe('pdf'));

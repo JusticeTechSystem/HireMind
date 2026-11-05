@@ -1,5 +1,5 @@
 import { Injectable, Logger, Optional, ServiceUnavailableException } from '@nestjs/common';
-import { loadEnv } from '@justiceview/config';
+import { loadEnv } from '@hiremind/config';
 import { CircuitBreaker, CircuitOpenError, fetchResilient } from '../common/resilience';
 import { PrismaService } from '../prisma/prisma.service';
 import { aiContext } from './ai-context';

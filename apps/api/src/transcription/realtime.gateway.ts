@@ -2,7 +2,7 @@ import { Logger, Optional } from '@nestjs/common';
 import { ConnectedSocket, MessageBody, OnGatewayConnection, OnGatewayInit, SubscribeMessage, WebSocketGateway, WebSocketServer } from '@nestjs/websockets';
 import type { Server, Socket } from 'socket.io';
 import { SessionRegistry } from '../auth/session-registry';
-import { audioStatusSchema, sessionRefSchema, transcriptFinalSchema, transcriptPartialSchema } from '@justiceview/validation';
+import { audioStatusSchema, sessionRefSchema, transcriptFinalSchema, transcriptPartialSchema } from '@hiremind/validation';
 import { verifyAccessToken } from '../auth/token';
 import { InterviewsService } from '../interviews/interviews.service';
 import { RealtimeBus } from '../realtime/realtime.bus';

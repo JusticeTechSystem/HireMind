@@ -1,6 +1,6 @@
 import { UsageService } from '../billing/usage.service';
 import { Injectable, Optional } from '@nestjs/common';
-import { codingResponseSchema, systemDesignResponseSchema, type CodingResponse, type SystemDesignResponse } from '@justiceview/validation';
+import { codingResponseSchema, systemDesignResponseSchema, type CodingResponse, type SystemDesignResponse } from '@hiremind/validation';
 import { AiProvider } from '../ai/ai-provider';
 import { completeValidated } from '../common/parse';
 import { PrismaService } from '../prisma/prisma.service';

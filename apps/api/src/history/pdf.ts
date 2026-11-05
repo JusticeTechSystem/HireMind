@@ -10,7 +10,7 @@ export function buildSessionPdf(d: PdfData): Promise<Buffer> {
     const fp = process.env.PDF_FONT_PATH; const unicode = !!fp && fs.existsSync(fp); if (unicode) { doc.registerFont('Body', fp as string); doc.font('Body'); } // set PDF_FONT_PATH to a Unicode TTF (e.g. Noto Sans) for non-Latin text
     doc.on('data', (b: Buffer) => chunks.push(b)); doc.on('end', () => resolve(Buffer.concat(chunks))); doc.on('error', reject);
     const h = (x: string) => { doc.moveDown().fontSize(14).fillColor('#5b21b6').text(x).fillColor('black').fontSize(10); };
-    doc.fontSize(20).text(d.title); doc.fontSize(10).fillColor('gray').text(`${d.date.toISOString().slice(0, 10)} · ${d.minutes} min active · JusticeView`).fillColor('black');
+    doc.fontSize(20).text(d.title); doc.fontSize(10).fillColor('gray').text(`${d.date.toISOString().slice(0, 10)} · ${d.minutes} min active · HireMind`).fillColor('black');
     if (!unicode && /[^\u0000-\u024f\u2000-\u206f]/.test(JSON.stringify(d))) doc.fillColor('gray').text('Note: some characters may not display in this export; the operator can set PDF_FONT_PATH to a Unicode font.').fillColor('black');
     if (d.summary) { h('Summary'); if (d.summary.overview) doc.text(d.summary.overview);
       for (const [k, v] of [['Key topics', d.summary.keyTopics], ['Strengths', d.summary.strengths], ['To improve', d.summary.improvements]] as const) if (v?.length) doc.moveDown(0.5).text(`${k}: ${v.join('; ')}`); }

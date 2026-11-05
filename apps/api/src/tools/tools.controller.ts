@@ -1,6 +1,6 @@
 import { Body, Controller, Post, UseGuards } from '@nestjs/common';
 import { Throttle } from '@nestjs/throttler';
-import { codingRequestSchema, systemDesignRequestSchema } from '@justiceview/validation';
+import { codingRequestSchema, systemDesignRequestSchema } from '@hiremind/validation';
 import { AuthGuard } from '../auth/auth.guard';
 import { CurrentUser, RolesGuard } from '../auth/roles';
 import type { AuthUser } from '../auth/auth.types';

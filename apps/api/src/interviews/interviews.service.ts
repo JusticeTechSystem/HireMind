@@ -1,6 +1,6 @@
 import { UsageService } from '../billing/usage.service';
 import { BadRequestException, ConflictException, Injectable, NotFoundException, Optional } from '@nestjs/common';
-import type { CreateInterviewInput } from '@justiceview/validation';
+import type { CreateInterviewInput } from '@hiremind/validation';
 import { PrismaService } from '../prisma/prisma.service';
 import { Action, rule } from './lifecycle';
 import { RealtimeBus } from '../realtime/realtime.bus';

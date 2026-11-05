@@ -1,6 +1,6 @@
 import { CacheService } from '../common/cache';
 import { BadRequestException, ConflictException, Injectable, Logger, Optional, ServiceUnavailableException } from '@nestjs/common';
-import { loadEnv } from '@justiceview/config';
+import { loadEnv } from '@hiremind/config';
 import { PrismaService } from '../prisma/prisma.service';
 import { NotificationsService } from '../notifications/notifications.service';
 import { StripeGateway } from './stripe.gateway';
@@ -72,7 +72,7 @@ export class BillingService {
       case 'customer.subscription.deleted': {
         const row = await this.prisma.subscription.findUnique({ where: { stripeSubscriptionId: o.id } });
         await this.prisma.subscription.updateMany({ where: { stripeSubscriptionId: o.id }, data: { status: 'CANCELED' } });
-        if (row) await this.notifications.notify(row.userId, 'subscription_canceled', 'Subscription ended', 'Your JusticeView subscription has ended. You are now on the Free plan.', { email: true }); break; }
+        if (row) await this.notifications.notify(row.userId, 'subscription_canceled', 'Subscription ended', 'Your HireMind subscription has ended. You are now on the Free plan.', { email: true }); break; }
       case 'invoice.paid': await this.recordInvoice(o, 'paid'); break;
       case 'invoice.payment_failed': {
         const uid = await this.recordInvoice(o, 'failed');
@@ -93,7 +93,7 @@ export class BillingService {
     const data = { userId, planId: match.plan.id, status, interval: match.interval, currentPeriodEnd: periodEnd(sub), cancelAtPeriodEnd: !!sub.cancel_at_period_end };
     await this.prisma.subscription.upsert({ where: { stripeSubscriptionId: sub.id }, create: { ...data, stripeSubscriptionId: sub.id }, update: data });
     if (!existing && (status === 'ACTIVE' || status === 'TRIALING'))
-      await this.notifications.notify(userId, 'subscription_confirmed', 'Subscription confirmed', 'Thanks for subscribing to JusticeView. Your plan is now active.', { email: true });
+      await this.notifications.notify(userId, 'subscription_confirmed', 'Subscription confirmed', 'Thanks for subscribing to HireMind. Your plan is now active.', { email: true });
   }
   private async recordInvoice(inv: any, status: 'paid' | 'failed'): Promise<string | null> {
     const u = await this.userByCustomer(inv.customer); if (!u) return null;

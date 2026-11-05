@@ -1,6 +1,6 @@
 import { ConflictException, NotFoundException, ServiceUnavailableException } from '@nestjs/common';
 import * as jwt from 'jsonwebtoken';
-import { transcriptFinalSchema } from '@justiceview/validation';
+import { transcriptFinalSchema } from '@hiremind/validation';
 import { OpenAiRealtimeProvider } from './provider';
 import { RealtimeGateway } from './realtime.gateway';
 import { TranscriptionService } from './transcription.service';

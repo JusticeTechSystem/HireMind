@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Link, useNavigate } from 'react-router-dom';
-import { credentialsSchema } from '@justiceview/validation';
+import { credentialsSchema } from '@hiremind/validation';
 import { authConfigured, supabase } from '../lib/supabase';
 
 type F = { email: string; password: string };

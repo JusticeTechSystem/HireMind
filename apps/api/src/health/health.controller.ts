@@ -1,6 +1,6 @@
 import { Controller, Get, Optional, ServiceUnavailableException } from '@nestjs/common';
-import { integrationStatus, loadEnv } from '@justiceview/config';
-import type { HealthResponse } from '@justiceview/shared-types';
+import { integrationStatus, loadEnv } from '@hiremind/config';
+import type { HealthResponse } from '@hiremind/shared-types';
 import { PrismaService } from '../prisma/prisma.service';
 
 @Controller('health')

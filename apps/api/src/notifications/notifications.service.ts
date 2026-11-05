@@ -1,5 +1,5 @@
 import { Controller, Get, Injectable, Logger, Param, ParseUUIDPipe, Patch, Post, UseGuards, Global, Module } from '@nestjs/common';
-import { loadEnv } from '@justiceview/config';
+import { loadEnv } from '@hiremind/config';
 import { AuthGuard } from '../auth/auth.guard';
 import { CurrentUser, RolesGuard } from '../auth/roles';
 import type { AuthUser } from '../auth/auth.types';
@@ -16,7 +16,7 @@ export class Mailer {
     try {
       const r = await fetch('https://api.resend.com/emails', { method: 'POST', signal: AbortSignal.timeout(10000),
         headers: { Authorization: `Bearer ${e.RESEND_API_KEY}`, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ from: e.RESEND_FROM ?? 'JusticeView <onboarding@resend.dev>', to: [to], subject, text, html: `<p>${esc(text).replace(/\\n/g, '<br>')}</p>` }) });
+        body: JSON.stringify({ from: e.RESEND_FROM ?? 'HireMind <onboarding@resend.dev>', to: [to], subject, text, html: `<p>${esc(text).replace(/\\n/g, '<br>')}</p>` }) });
       if (!r.ok) this.log.warn(`Resend responded ${r.status}`); return r.ok;
     } catch (err) { this.log.warn(`email failed: ${(err as Error).message}`); return false; }
   }

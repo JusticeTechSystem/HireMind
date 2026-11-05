@@ -1,7 +1,7 @@
 // Development-only demo data: one fully populated account so every screen has something real to show.
 // The user id/email are fixed so you can create the matching Supabase Auth user (same id) and sign in; refuses to run against production.
 import { PrismaClient } from '@prisma/client';
-const prisma = new PrismaClient(); const ID = '11111111-1111-4111-8111-111111111111'; const EMAIL = 'demo@justiceview.local';
+const prisma = new PrismaClient(); const ID = '11111111-1111-4111-8111-111111111111'; const EMAIL = 'demo@hiremind.local';
 async function main() {
   if (process.env.NODE_ENV === 'production' || (/supabase\.co|amazonaws\.com/.test(process.env.DATABASE_URL ?? '') && !process.argv.includes('--i-know-this-is-not-prod'))) throw new Error('Refusing to seed demo data into what looks like a hosted/production database');
   const day = (n: number) => new Date(Date.now() - n * 864e5);
@@ -19,7 +19,7 @@ async function main() {
   const sc = (n: number) => ({ relevance: n, technicalCorrectness: n, completeness: n, clarity: n, communication: n, structure: n });
   for (const [i, n] of [6, 7, 8].entries()) await prisma.mockInterview.create({ data: { userId: ID, category: i % 2 ? 'coding' : 'behavioral', jobTitle: 'Backend Engineer', level: 'mid', difficulty: 'medium', durationMin: 30, numQuestions: 1, status: 'COMPLETED', overallScore: n * 10, completedAt: day(9 - i * 3), createdAt: day(9 - i * 3), summary: { answered: 1, total: 1, dimensionAverages: sc(n) }, questions: { create: [{ idx: 0, text: 'Tell me about a hard bug you fixed.', topic: 'debugging', response: { create: { answerText: 'I traced a race condition…', scores: sc(n), feedback: { strengths: ['Clear structure'], improvements: ['Quantify the impact'], idealAnswerOutline: 'Situation, cause, fix, result.' } } } }] } } });
   await prisma.usageRecord.createMany({ data: [{ userId: ID, metric: 'aiRequests', quantity: 1 }, { userId: ID, metric: 'aiRequests', quantity: 1 }, { userId: ID, metric: 'mockInterviews', quantity: 1 }, { userId: ID, metric: 'transcriptionMinutes', quantity: 25 }] });
-  await prisma.notification.create({ data: { userId: ID, type: 'welcome', title: 'Welcome to JusticeView', body: 'Demo data loaded.' } });
+  await prisma.notification.create({ data: { userId: ID, type: 'welcome', title: 'Welcome to HireMind', body: 'Demo data loaded.' } });
   console.log(`Seeded demo account ${EMAIL} (id ${ID}). Create a Supabase Auth user with that id/email to sign in as it.`);
 }
 main().catch((e) => { console.error(e.message); process.exit(1); }).finally(() => prisma.$disconnect());

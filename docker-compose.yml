@@ -1,7 +1,7 @@
 services:
   postgres:
     image: postgres:16
-    environment: {POSTGRES_USER: jv, POSTGRES_PASSWORD: jv, POSTGRES_DB: justiceview}
+    environment: {POSTGRES_USER: hm, POSTGRES_PASSWORD: hm, POSTGRES_DB: hiremind}
     ports: ["5432:5432"]
     volumes: [pgdata:/var/lib/postgresql/data]
   redis:
@@ -11,7 +11,7 @@ services:
     profiles: [app]
     build: { context: ., dockerfile: infrastructure/docker/api.Dockerfile }
     env_file: .env
-    environment: { DATABASE_URL: postgresql://jv:jv@postgres:5432/justiceview, DIRECT_URL: postgresql://jv:jv@postgres:5432/justiceview, REDIS_URL: redis://redis:6379 }
+    environment: { DATABASE_URL: postgresql://hm:hm@postgres:5432/hiremind, DIRECT_URL: postgresql://hm:hm@postgres:5432/hiremind, REDIS_URL: redis://redis:6379 }
     depends_on: [postgres, redis]
     ports: ["3000:3000"]
   web:

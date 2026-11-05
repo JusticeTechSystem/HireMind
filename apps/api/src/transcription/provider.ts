@@ -1,5 +1,5 @@
 import { Injectable, ServiceUnavailableException } from '@nestjs/common';
-import { loadEnv } from '@justiceview/config';
+import { loadEnv } from '@hiremind/config';
 import { CircuitBreaker, fetchResilient } from '../common/resilience';
 export interface BrowserCredential { token: string; expiresAt: number | null; url: string; }
 /** Transcription provider abstraction: swap implementations without touching business logic. */

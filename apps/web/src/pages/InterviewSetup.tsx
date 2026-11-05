@@ -2,7 +2,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { Link, useNavigate } from 'react-router-dom';
-import { createInterviewSchema, type CreateInterviewInput } from '@justiceview/validation';
+import { createInterviewSchema, type CreateInterviewInput } from '@hiremind/validation';
 import { api } from '../lib/auth';
 
 export function InterviewSetup() {

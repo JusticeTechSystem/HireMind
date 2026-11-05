@@ -1,6 +1,6 @@
 import { aiContext } from '../ai/ai-context';
 import { Injectable, Logger, Optional } from '@nestjs/common';
-import { classificationSchema } from '@justiceview/validation';
+import { classificationSchema } from '@hiremind/validation';
 import { AiProvider } from '../ai/ai-provider';
 import { PrismaService } from '../prisma/prisma.service';
 import { RealtimeBus } from '../realtime/realtime.bus';

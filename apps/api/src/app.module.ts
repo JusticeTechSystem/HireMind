@@ -23,7 +23,7 @@ import { AvatarModule } from './profiles/avatar';
 import { CacheModule } from './common/cache';
 import { JobsModule } from './jobs/jobs.service';
 import { ThrottlerStorageRedisService } from '@nest-lab/throttler-storage-redis';
-import { loadEnv } from '@justiceview/config';
+import { loadEnv } from '@hiremind/config';
 import { HealthController } from './health/health.controller';
 
 @Module({

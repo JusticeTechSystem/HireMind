@@ -1,6 +1,6 @@
 import { UsageService } from '../billing/usage.service';
 import { ConflictException, Injectable, NotFoundException, Optional } from '@nestjs/common';
-import { sessionSummarySchema } from '@justiceview/validation';
+import { sessionSummarySchema } from '@hiremind/validation';
 import { AiProvider } from '../ai/ai-provider';
 import { completeValidated } from '../common/parse';
 import { PrismaService } from '../prisma/prisma.service';

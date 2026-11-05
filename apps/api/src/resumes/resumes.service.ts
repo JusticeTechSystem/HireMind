@@ -2,7 +2,7 @@ import { JobsService } from '../jobs/jobs.service';
 import { UsageService } from '../billing/usage.service';
 import { BadRequestException, HttpException, Injectable, Logger, NotFoundException, OnModuleInit, Optional } from '@nestjs/common';
 import { randomUUID } from 'crypto';
-import { resumeProfileSchema } from '@justiceview/validation';
+import { resumeProfileSchema } from '@hiremind/validation';
 import { PrismaService } from '../prisma/prisma.service';
 import { AiProvider } from '../ai/ai-provider';
 import { StorageService } from './storage';

@@ -1,6 +1,6 @@
 import { BadRequestException, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import * as jwt from 'jsonwebtoken';
-import { audioStatusSchema, feedbackSchema, retentionSchema } from '@justiceview/validation';
+import { audioStatusSchema, feedbackSchema, retentionSchema } from '@hiremind/validation';
 import { AnswersService } from './questions/answers.service';
 import { AvatarService, detectImage, MAX_AVATAR_BYTES } from './profiles/avatar';
 import { RetentionService, cutoff } from './account/retention.service';

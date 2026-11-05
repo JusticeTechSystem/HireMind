@@ -1,6 +1,6 @@
 import { UsageService } from '../billing/usage.service';
 import { ConflictException, Injectable, NotFoundException, Optional } from '@nestjs/common';
-import type { TranscriptFinal } from '@justiceview/validation';
+import type { TranscriptFinal } from '@hiremind/validation';
 import { PrismaService } from '../prisma/prisma.service';
 import { TranscriptionProvider } from './provider';
 

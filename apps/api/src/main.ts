@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 import { NestFactory } from '@nestjs/core';
-import { loadEnv } from '@justiceview/config';
+import { loadEnv } from '@hiremind/config';
 import helmet from 'helmet';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as Sentry from '@sentry/node';
@@ -26,7 +26,7 @@ async function bootstrap() {
   app.use(helmet());
   app.enableCors({ origin: env.FRONTEND_URL, credentials: true });
   app.setGlobalPrefix('api/v1');
-  const doc = SwaggerModule.createDocument(app, new DocumentBuilder().setTitle('JusticeView API').setVersion('0.1').build());
+  const doc = SwaggerModule.createDocument(app, new DocumentBuilder().setTitle('HireMind API').setVersion('0.1').build());
   SwaggerModule.setup('api/docs', app, doc);
   await app.listen(env.PORT);
 }

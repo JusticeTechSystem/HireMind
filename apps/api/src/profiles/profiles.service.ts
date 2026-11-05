@@ -1,6 +1,6 @@
 import { NotificationsService } from '../notifications/notifications.service';
 import { Injectable, Optional } from '@nestjs/common';
-import { OnboardingInput } from '@justiceview/validation';
+import { OnboardingInput } from '@hiremind/validation';
 import { PrismaService } from '../prisma/prisma.service';
 
 const FIELDS = ['fullName', 'title', 'careerLevel', 'yearsExperience', 'industry', 'specialization',
@@ -33,7 +33,7 @@ export class ProfilesService {
     const profile = await this.prisma.profile.upsert({
       where: { userId }, create: { userId, ...input, onboardedAt: new Date() }, update: { ...input, onboardedAt: new Date() },
     });
-    if (!existing?.onboardedAt) void this.notifications?.notify(userId, 'welcome', 'Welcome to JusticeView', 'Your profile is set up. Upload a resume and start a mock interview to get going.', { email: true }).catch(() => undefined);
+    if (!existing?.onboardedAt) void this.notifications?.notify(userId, 'welcome', 'Welcome to HireMind', 'Your profile is set up. Upload a resume and start a mock interview to get going.', { email: true }).catch(() => undefined);
     return { profile, completion: ProfilesService.completion(profile as any) };
   }
 }

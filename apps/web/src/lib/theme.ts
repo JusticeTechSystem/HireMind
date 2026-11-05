@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 export type Pref = 'system' | 'light' | 'dark';
-const KEY = 'jv-theme';
+const KEY = 'hm-theme';
 const read = (): Pref => { try { const v = localStorage.getItem(KEY); return v === 'light' || v === 'dark' ? v : 'system'; } catch { return 'system'; } };
 const systemLight = () => typeof matchMedia === 'function' && matchMedia('(prefers-color-scheme: light)').matches;
 export const resolve = (p: Pref): 'light' | 'dark' => (p === 'system' ? (systemLight() ? 'light' : 'dark') : p);

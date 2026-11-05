@@ -1,7 +1,7 @@
 import { IdempotencyInterceptor } from '../common/idempotency';
 import { Body, Controller, DefaultValuePipe, Get, Param, ParseIntPipe, ParseUUIDPipe, Post, Query, UseGuards, UseInterceptors } from '@nestjs/common';
 import { Throttle } from '@nestjs/throttler';
-import { mockAnswerSchema, mockCreateSchema } from '@justiceview/validation';
+import { mockAnswerSchema, mockCreateSchema } from '@hiremind/validation';
 import { AuthGuard } from '../auth/auth.guard';
 import { CurrentUser, RolesGuard } from '../auth/roles';
 import type { AuthUser } from '../auth/auth.types';

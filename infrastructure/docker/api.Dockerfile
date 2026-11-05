@@ -3,7 +3,7 @@ RUN corepack enable && apt-get update && apt-get install -y openssl && rm -rf /v
 WORKDIR /app
 COPY . .
 RUN pnpm install --frozen-lockfile=false && pnpm exec prisma generate \
- && pnpm --filter "./packages/*" build && pnpm --filter @justiceview/api build
+ && pnpm --filter "./packages/*" build && pnpm --filter @hiremind/api build
 
 FROM node:22-slim
 RUN corepack enable && apt-get update && apt-get install -y openssl fonts-noto-core && rm -rf /var/lib/apt/lists/*

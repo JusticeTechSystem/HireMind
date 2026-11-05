@@ -1,6 +1,6 @@
 import { UsageService } from '../billing/usage.service';
 import { Injectable, Logger, NotFoundException, Optional, UnprocessableEntityException } from '@nestjs/common';
-import { aiAnswerSchema, explainSchema, resumeProfileSchema, type AiAnswer, type AnswerMode, type ResumeProfile } from '@justiceview/validation';
+import { aiAnswerSchema, explainSchema, resumeProfileSchema, type AiAnswer, type AnswerMode, type ResumeProfile } from '@hiremind/validation';
 import { AiProvider } from '../ai/ai-provider';
 import { PrismaService } from '../prisma/prisma.service';
 import { RealtimeBus } from '../realtime/realtime.bus';

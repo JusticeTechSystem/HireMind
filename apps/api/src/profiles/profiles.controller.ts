@@ -1,5 +1,5 @@
 import { BadRequestException, Body, Controller, Get, Put, UseGuards } from '@nestjs/common';
-import { onboardingSchema, retentionSchema } from '@justiceview/validation';
+import { onboardingSchema, retentionSchema } from '@hiremind/validation';
 import { AuthGuard } from '../auth/auth.guard';
 import { CurrentUser, RolesGuard } from '../auth/roles';
 import type { AuthUser } from '../auth/auth.types';
