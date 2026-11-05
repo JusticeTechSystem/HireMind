@@ -3,7 +3,6 @@ import { z } from 'zod';
 const required = z.string().min(1);
 const optional = z.string().optional();
 const blank = (s: z.ZodTypeAny) => z.preprocess((v) => (v === '' ? undefined : v), s); // empty .env values count as unset
-const blank = (s: z.ZodTypeAny) => z.preprocess((v) => (v === '' ? undefined : v), s); // empty .env values count as unset
 
 export const envSchema = z.object({
   NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
