@@ -7,7 +7,7 @@ import { ProfilesService } from './profiles/profiles.service';
 import { ResumesModule } from './resumes/resumes.module';
 import { DashboardController } from './dashboard/dashboard.controller';
 import { InterviewsModule } from './interviews/interviews.module';
-import { RealtimeModule } from './realtime/realtime.module';
+import { RealtimeModule } from './realtime/realtime.bus';
 import { TranscriptionModule } from './transcription/transcription.module';
 import { AiModule } from './ai/ai.module';
 import { QuestionsModule } from './questions/questions.module';

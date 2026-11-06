@@ -1,14 +1,33 @@
-generator client { provider = "prisma-client-js" }
+generator client {
+  provider = "prisma-client-js"
+}
 datasource db {
   provider  = "postgresql"
   url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
 }
 
-enum RoleName { USER ADMIN SUPER_ADMIN }
-enum SessionStatus { CREATED ACTIVE PAUSED COMPLETED }
-enum AudioSource { MICROPHONE SYSTEM }
-enum SubStatus { ACTIVE PAST_DUE CANCELED TRIALING }
+enum RoleName {
+  USER
+  ADMIN
+  SUPER_ADMIN
+}
+enum SessionStatus {
+  CREATED
+  ACTIVE
+  PAUSED
+  COMPLETED
+}
+enum AudioSource {
+  MICROPHONE
+  SYSTEM
+}
+enum SubStatus {
+  ACTIVE
+  PAST_DUE
+  CANCELED
+  TRIALING
+}
 
 model User {
   id        String   @id @default(uuid()) @db.Uuid

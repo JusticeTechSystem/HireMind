@@ -49,6 +49,9 @@ jobs:
         run: bash scripts/ci-step.sh "web tests" pnpm --filter @hiremind/web test
       - name: Dependency audit
         run: bash scripts/ci-step.sh "pnpm audit" pnpm audit --prod --audit-level=high
+      - name: Fail the job if any step above failed
+        if: always()
+        run: bash scripts/ci-finish.sh
   a11y:
     runs-on: ubuntu-latest
     steps:
@@ -66,3 +69,6 @@ jobs:
         run: >
           bash scripts/ci-step.sh "axe scan" bash -c
           'pnpm --filter @hiremind/web exec vite preview --port 5173 & sleep 6 && pnpm exec playwright test tests/e2e/a11y.spec.ts'
+      - name: Fail the job if any step above failed
+        if: always()
+        run: bash scripts/ci-finish.sh
