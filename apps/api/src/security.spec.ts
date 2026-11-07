@@ -9,6 +9,8 @@ import { AdminService } from './admin/admin.service';
 import { AiMonitorService } from './admin/ai-monitor';
 import { BillingController } from './billing/billing.controller';
 import { BillingService } from './billing/billing.service';
+import { UsageService } from './billing/usage.service';
+import { NotificationsService } from './notifications/notifications.service';
 import { StripeGateway } from './billing/stripe.gateway';
 import { HealthController } from './health/health.controller';
 import { InterviewsController } from './interviews/interviews.controller';
@@ -65,7 +67,7 @@ describe('cross-user data access (IDOR)', () => {
 
 describe('Stripe webhook endpoint', () => {
   let app: INestApplication; const gw = { constructEvent: jest.fn((raw: Buffer, sig: string) => { if (sig !== 'good') throw new Error('bad'); return { id: 'evt_1', type: 'noop', data: { object: {} } }; }) };
-  beforeAll(async () => { app = await boot({ controllers: [BillingController], providers: [BillingService, { provide: StripeGateway, useValue: gw }, { provide: 'x', useValue: 1 }], raw: true }); }); afterAll(() => app.close());
+  beforeAll(async () => { app = await boot({ controllers: [BillingController], providers: [BillingService, { provide: StripeGateway, useValue: gw }, { provide: NotificationsService, useValue: { notify: jest.fn() } }, { provide: UsageService, useValue: {} }], raw: true }); }); afterAll(() => app.close());
   it('rejects missing and invalid signatures with 400', async () => { await request(app.getHttpServer()).post('/billing/webhook').send({ a: 1 }).expect(400); await request(app.getHttpServer()).post('/billing/webhook').set('stripe-signature', 'bad').send({ a: 1 }).expect(400); });
   it('accepts a valid signature without a user token and verifies the RAW body bytes', async () => {
     await request(app.getHttpServer()).post('/billing/webhook').set('stripe-signature', 'good').set('Content-Type', 'application/json').send('{"a":1}').expect(201);
