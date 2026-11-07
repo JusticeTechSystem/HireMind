@@ -30,7 +30,7 @@ describe('fetchResilient', () => {
   it('returns the final error response after the retries are spent', async () => { const f = jest.fn(async () => res(500)); expect((await fetchResilient(new CircuitBreaker(99), f, { sleep: noSleep })).status).toBe(500); expect(f).toHaveBeenCalledTimes(3); });
   it('does not retry client errors', async () => { const f = jest.fn(async () => res(400)); expect((await fetchResilient(new CircuitBreaker(), f, { sleep: noSleep })).status).toBe(400); expect(f).toHaveBeenCalledTimes(1); });
   it('retries network errors then throws', async () => { const f = jest.fn(async () => { throw new Error('ECONNRESET'); }); await expect(fetchResilient(new CircuitBreaker(99), f, { sleep: noSleep })).rejects.toThrow('ECONNRESET'); expect(f).toHaveBeenCalledTimes(3); });
-  it('stops hammering a provider whose breaker is open', async () => { const b = new CircuitBreaker(2, 60_000); const f = jest.fn(async () => res(500)); await fetchResilient(b, f, { sleep: noSleep }); await expect(fetchResilient(b, f, { sleep: noSleep })).rejects.toBeInstanceOf(CircuitOpenError); });
+  it('stops hammering a provider whose breaker is open', async () => { const b = new CircuitBreaker(2, 60_000); const f = jest.fn(async () => res(500)); await fetchResilient(b, f, { sleep: noSleep }).catch(() => undefined); const calls = f.mock.calls.length; await expect(fetchResilient(b, f, { sleep: noSleep })).rejects.toBeInstanceOf(CircuitOpenError); expect(f.mock.calls.length).toBe(calls); /* no further upstream calls once open */ });
 });
 
 describe('CacheService (memory)', () => {
