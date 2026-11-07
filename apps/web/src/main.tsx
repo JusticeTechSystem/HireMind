@@ -15,7 +15,6 @@ import { AdminLink } from './components/AdminLink';
 import { NotificationsLink } from './components/NotificationsLink';
 import { ResetPassword } from './pages/ResetPassword';
 // Code-split: each of these pages (Monaco, Mermaid, admin tools, ...) is only downloaded when visited.
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const L = <T extends Record<string, React.ComponentType<any>>>(f: () => Promise<T>, k: keyof T) => lazy(() => f().then((m) => ({ default: m[k] })));
 const Resumes = L(() => import('./pages/Resumes'), 'Resumes'); const InterviewSetup = L(() => import('./pages/InterviewSetup'), 'InterviewSetup'); const Workspace = L(() => import('./pages/Workspace'), 'Workspace');
 const CodingAssistant = L(() => import('./pages/Tools'), 'CodingAssistant'); const SystemDesign = L(() => import('./pages/Tools'), 'SystemDesign');
