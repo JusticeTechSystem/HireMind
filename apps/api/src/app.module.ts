@@ -18,7 +18,7 @@ import { BillingModule } from './billing/billing.module';
 import { NotificationsModule } from './notifications/notifications.service';
 import { AdminModule } from './admin/admin.module';
 import { AccountModule } from './account/account.module';
-import { SessionsModule } from './auth/session-registry';
+import { SessionsModule } from './auth/sessions.module';
 import { AvatarModule } from './profiles/avatar';
 import { CacheModule } from './common/cache';
 import { JobsModule } from './jobs/jobs.service';
