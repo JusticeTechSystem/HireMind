@@ -6,5 +6,5 @@ export default defineConfig({
   plugins: [react()],
   resolve: { alias: { '@hiremind/validation': pkg('validation'), '@hiremind/shared-types': pkg('shared-types') } }, // no pre-build needed for dev/tests
   server: { proxy: { '/api': 'http://localhost:3000', '/socket.io': { target: 'http://localhost:3000', ws: true } } },
-  test: { environment: 'jsdom', include: ['src/**/*.test.{ts,tsx}'] },
+  test: { environment: 'jsdom', setupFiles: ['./src/test-setup.ts'], include: ['src/**/*.test.{ts,tsx}'] },
 });
