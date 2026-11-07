@@ -27,7 +27,7 @@ export function Settings() {
   const days = prof.data?.profile?.retentionDays ?? null;
   return <main id="main" className="min-h-screen bg-navy text-white p-6 max-w-xl mx-auto space-y-4"><Link to="/dashboard" className="text-sm text-gray-400 underline">← Dashboard</Link><h1 className="text-2xl font-semibold">Settings</h1><p className="text-sm text-gray-400">Signed in as {email}</p>
     <section aria-labelledby="s-profile" className={box}><h2 id="s-profile" className="font-medium">Profile picture</h2>
-      <div className="flex items-center gap-3">{avatar.data?.url ? <img src={avatar.data.url} alt="Your profile picture" width={64} height={64} className="rounded-full object-cover w-16 h-16" /> : <span aria-hidden="true" className="w-16 h-16 rounded-full bg-accent grid place-items-center text-xl">{(email ?? '?')[0].toUpperCase()}</span>}
+      <div className="flex items-center gap-3">{avatar.data?.url ? <img src={avatar.data.url} alt="Your avatar" width={64} height={64} className="rounded-full object-cover w-16 h-16" /> : <span aria-hidden="true" className="w-16 h-16 rounded-full bg-accent grid place-items-center text-xl">{(email ?? '?')[0].toUpperCase()}</span>}
         <input ref={file} type="file" accept="image/png,image/jpeg,image/webp" hidden aria-label="Choose profile picture" onChange={(e) => e.target.files?.[0] && upload.mutate(e.target.files[0])} />
         <button className={btn} disabled={upload.isPending} onClick={() => file.current?.click()}>{upload.isPending ? 'Uploading…' : 'Upload (PNG, JPEG, WebP, max 2 MB)'}</button>
         {avatar.data?.url && <button className={btn} onClick={() => rmAvatar.mutate()}>Remove</button>}</div>
