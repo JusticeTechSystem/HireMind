@@ -5,7 +5,8 @@
 name="$1"; shift; log="$(mktemp)"
 set +e; "$@" 2>&1 | tee "$log"; code=${PIPESTATUS[0]}; set -e
 if [ "$code" -ne 0 ]; then
-  msg="$( { grep -iE 'error|fail|cannot|not found|ERR_|✗|FAIL' "$log" | head -n 15; echo '--- last lines ---'; tail -n 25 "$log"; } | cut -c1-300 )"
+  blocks="$(awk '/^[[:space:]]*● /{c=16} c>0{print; c--}' "$log" | head -n 90)"
+  msg="$( { [ -n "$blocks" ] && { echo '--- failing tests ---'; echo "$blocks"; }; grep -iE 'error|fail|cannot|not found|ERR_|✗|FAIL' "$log" | head -n 15; echo '--- last lines ---'; tail -n 25 "$log"; } | cut -c1-300 )"
   esc="$(printf '%s' "$msg" | sed ':a;N;$!ba;s/%/%25/g;s/\r//g;s/\n/%0A/g')"
   if [ -n "${WARN_ONLY:-}" ]; then echo "::warning title=${name} reported problems (exit ${code}), not blocking::${esc}"
   else echo "::error title=${name} failed (exit ${code})::${esc}"; echo "${name} (exit ${code})" >> "${RUNNER_TEMP:-/tmp}/ci-failures.txt"; fi
