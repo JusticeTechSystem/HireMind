@@ -10,7 +10,7 @@ export class StorageService {
   }
   async put(path: string, body: Buffer, contentType: string, bucket?: string) {
     const c = this.cfg(bucket);
-    const r = await fetch(`${c.base}/object/${c.bucket}/${path}`, { method: 'POST', headers: { ...c.h, 'Content-Type': contentType }, body });
+    const r = await fetch(`${c.base}/object/${c.bucket}/${path}`, { method: 'POST', headers: { ...c.h, 'Content-Type': contentType }, body: new Uint8Array(body) });
     if (!r.ok) throw new ServiceUnavailableException(`Storage upload failed (${r.status})`);
   }
   async signedUrl(path: string, seconds = 300, bucket?: string): Promise<string> {
