@@ -1,1 +1,37 @@
-{"name": "hiremind", "private": true, "packageManager": "pnpm@9.12.0", "scripts": {"dev:api": "pnpm --filter @hiremind/api start:dev", "dev:web": "pnpm --filter @hiremind/web dev", "build": "pnpm -r build", "test": "pnpm -r test", "db:migrate": "prisma migrate dev", "db:seed": "tsx prisma/seed.ts", "admin:grant": "tsx prisma/make-admin.ts", "test:e2e": "playwright test", "test:load": "k6 run tests/load/api.js", "rls:sql": "echo run prisma/rls.sql against your database", "contrast": "node scripts/contrast-check.mjs", "migrate:init-sql": "python3 scripts/gen-init-migration.py", "db:deploy": "prisma migrate deploy", "db:seed:dev": "tsx prisma/seed-dev.ts", "smoke": "node scripts/smoke.mjs", "docs:api": "python3 scripts/gen-api-docs.py"}, "devDependencies": {"prisma": "^5.22.0", "tsx": "^4.19.0", "typescript": "^5.6.0", "@playwright/test": "^1.48.0"}, "dependencies": {"@prisma/client": "^5.22.0"}, "prisma": {"schema": "prisma/schema.prisma", "seed": "tsx prisma/seed.ts"}}
+{
+  "name": "hiremind",
+  "private": true,
+  "packageManager": "pnpm@9.12.0",
+  "scripts": {
+    "dev:api": "pnpm --filter @hiremind/api start:dev",
+    "dev:web": "pnpm --filter @hiremind/web dev",
+    "build": "pnpm -r build",
+    "test": "pnpm -r test",
+    "db:migrate": "prisma migrate dev",
+    "db:seed": "tsx prisma/seed.ts",
+    "admin:grant": "tsx prisma/make-admin.ts",
+    "test:e2e": "playwright test",
+    "test:load": "k6 run tests/load/api.js",
+    "rls:sql": "echo run prisma/rls.sql against your database",
+    "contrast": "node scripts/contrast-check.mjs",
+    "migrate:init-sql": "python3 scripts/gen-init-migration.py",
+    "db:deploy": "prisma migrate deploy",
+    "db:seed:dev": "tsx prisma/seed-dev.ts",
+    "smoke": "node scripts/smoke.mjs",
+    "docs:api": "python3 scripts/gen-api-docs.py"
+  },
+  "devDependencies": {
+    "prisma": "^5.22.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0",
+    "@playwright/test": "^1.48.0",
+    "@axe-core/playwright": "^4.10.0"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.22.0"
+  },
+  "prisma": {
+    "schema": "prisma/schema.prisma",
+    "seed": "tsx prisma/seed.ts"
+  }
+}
