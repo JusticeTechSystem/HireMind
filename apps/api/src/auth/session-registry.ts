@@ -1,9 +1,6 @@
-import { Controller, Get, Global, Injectable, Module, NotFoundException, Optional, Param, ParseUUIDPipe, Post, UnauthorizedException, UseGuards } from '@nestjs/common';
+import { Injectable, NotFoundException, Optional, UnauthorizedException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { RealtimeBus } from '../realtime/realtime.bus';
-import { AuthGuard } from './auth.guard';
-import { CurrentUser, RolesGuard } from './roles';
-import type { AuthUser } from './auth.types';
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const TTL_MS = 30_000;
@@ -20,8 +17,8 @@ export class SessionRegistry {
 
   static ipPrefix(ip?: string) { if (!ip) return null; return ip.includes(':') ? ip.split(':').slice(0, 4).join(':') + '::' : ip.replace(/\d+$/, '0'); } // stored coarsely on purpose
 
-  async check(userId: string, claims: { session_id?: string }, ua?: string, ip?: string, now = Date.now()) {
-    const id = claims.session_id; if (!id || !UUID.test(id)) return; // tokens without a session id are not tracked
+  async check(userId: string, claims: Record<string, unknown>, ua?: string, ip?: string, now = Date.now()) {
+    const id = typeof claims.session_id === 'string' ? claims.session_id : undefined; if (!id || !UUID.test(id)) return; // tokens without a session id are not tracked
     const hit = this.cache.get(id);
     if (hit && now - hit.at < TTL_MS) { if (hit.revoked) throw new UnauthorizedException('Session revoked'); return; }
     const row = await this.prisma.userSession.upsert({ where: { id }, create: { id, userId, userAgent: ua?.slice(0, 200), ipPrefix: SessionRegistry.ipPrefix(ip) }, update: { lastSeenAt: new Date(now) } });
@@ -50,15 +47,3 @@ export class SessionRegistry {
   }
   async revokeAll(userId: string) { const r = await this.revokeOthers(userId, undefined); return r; }
 }
-
-@Controller('sessions')
-@UseGuards(AuthGuard, RolesGuard)
-export class SessionsController {
-  constructor(private svc: SessionRegistry) {}
-  @Get() list(@CurrentUser() u: AuthUser) { return this.svc.list(u.id, u.sessionId); }
-  @Post('revoke-others') others(@CurrentUser() u: AuthUser) { return this.svc.revokeOthers(u.id, u.sessionId); }
-  @Post(':id/revoke') revoke(@CurrentUser() u: AuthUser, @Param('id', ParseUUIDPipe) id: string) { return this.svc.revoke(u.id, id); }
-}
-
-@Global() @Module({ controllers: [SessionsController], providers: [SessionRegistry], exports: [SessionRegistry] })
-export class SessionsModule {}
