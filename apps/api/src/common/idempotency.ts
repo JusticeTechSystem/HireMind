@@ -1,5 +1,5 @@
 import { BadRequestException, CallHandler, ConflictException, ExecutionContext, Injectable, NestInterceptor, UnprocessableEntityException } from '@nestjs/common';
-import { Observable, catchError, from, mergeMap, of, throwError } from 'rxjs';
+import { Observable, catchError, defer, mergeMap, of } from 'rxjs';
 import { PrismaService } from '../prisma/prisma.service';
 
 /**
@@ -25,6 +25,6 @@ export class IdempotencyInterceptor implements NestInterceptor {
     }
     return next.handle().pipe(
       mergeMap(async (body) => { await this.prisma.idempotencyKey.update({ where: id, data: { status: 200, response: (body ?? null) as never } }); return body; }),
-      catchError((err) => from(this.prisma.idempotencyKey.deleteMany({ where: { userId, key } })).pipe(mergeMap(() => throwError(() => err)))));
+      catchError((err) => defer(async () => { await this.prisma.idempotencyKey.deleteMany({ where: { userId, key } }); throw err; })));
   }
 }
